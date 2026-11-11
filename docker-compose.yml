@@ -1,0 +1,45 @@
+# MongoDB replica set for HAMATRIX.
+# A replica set is required because every financial operation uses multi-document
+# transactions. A single-node replica set is enough for one café.
+#
+# Usage:
+#   docker compose up -d
+#   MONGODB_URI="mongodb://127.0.0.1:27017/hamatrix?replicaSet=rs0&directConnection=true" npm run seed
+#
+# If Docker is not available, use `npm run db:dev` (downloads a mongod binary
+# through mongodb-memory-server and keeps data in ./.data/mongo).
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: hamatrix-mongo
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mongo-init:
+    image: mongo:7
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: "no"
+    entrypoint:
+      - mongosh
+      - --host
+      - mongo:27017
+      - --quiet
+      - --eval
+      - |
+        try { rs.status() } catch (e) {
+          rs.initiate({ _id: "rs0", members: [{ _id: 0, host: "mongo:27017" }] })
+        }
+
+volumes:
+  mongo-data:

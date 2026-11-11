@@ -1,0 +1,7 @@
+{"_id":{"$oid":"6af3aded7fa6818abb5e88ab"},"name":"إيجار","createdAt":{"$date":{"$numberLong":"1794354669371"}},"isActive":true,"isSystem":true,"slug":"rent","updatedAt":{"$date":{"$numberLong":"1794377106554"}}}
+{"_id":{"$oid":"6af3aded7fa6818abb5e88ac"},"name":"رواتب","createdAt":{"$date":{"$numberLong":"1794354669371"}},"isActive":true,"isSystem":true,"slug":"salaries","updatedAt":{"$date":{"$numberLong":"1794377106554"}}}
+{"_id":{"$oid":"6af3aded7fa6818abb5e88ad"},"name":"كهربا","createdAt":{"$date":{"$numberLong":"1794354669371"}},"isActive":true,"isSystem":true,"slug":"electricity","updatedAt":{"$date":{"$numberLong":"1794377106554"}}}
+{"_id":{"$oid":"6af3aded7fa6818abb5e88af"},"name":"مستلزمات كافيتريا","createdAt":{"$date":{"$numberLong":"1794354669371"}},"isActive":true,"isSystem":true,"slug":"cafeteria-supplies","updatedAt":{"$date":{"$numberLong":"1794377106554"}}}
+{"_id":{"$oid":"6af3aded7fa6818abb5e88b0"},"name":"أخرى","createdAt":{"$date":{"$numberLong":"1794354669371"}},"isActive":true,"isSystem":true,"slug":"other-expenses","updatedAt":{"$date":{"$numberLong":"1794377106554"}}}
+{"_id":{"$oid":"6af3aded7fa6818abb5e88b1"},"name":"إنترنت","createdAt":{"$date":{"$numberLong":"1794354669371"}},"isActive":true,"isSystem":true,"slug":"internet","updatedAt":{"$date":{"$numberLong":"1794377106554"}}}
+{"_id":{"$oid":"6af3aded7fa6818abb5e88b2"},"name":"صيانة","createdAt":{"$date":{"$numberLong":"1794354669371"}},"isActive":true,"isSystem":true,"slug":"maintenance","updatedAt":{"$date":{"$numberLong":"1794377106554"}}}

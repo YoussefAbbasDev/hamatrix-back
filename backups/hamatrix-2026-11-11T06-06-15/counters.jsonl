@@ -1,0 +1,5 @@
+{"_id":"visit:2611","seq":{"$numberInt":"5"}}
+{"_id":"device","seq":{"$numberInt":"2"}}
+{"_id":"session:2611","seq":{"$numberInt":"5"}}
+{"_id":"product","seq":{"$numberInt":"3"}}
+{"_id":"invoice:2611","seq":{"$numberInt":"2"}}

@@ -1,0 +1,23 @@
+{
+  "format": "hamatrix-ejson-ndjson",
+  "version": 1,
+  "createdAt": "2026-11-11T06:06:15.763Z",
+  "database": "hamatrix",
+  "collections": {
+    "sessions": 5,
+    "invoices": 2,
+    "expensecategories": 7,
+    "stockmovements": 5,
+    "auditlogs": 30,
+    "expenses": 1,
+    "products": 3,
+    "devices": 2,
+    "settings": 1,
+    "counters": 5,
+    "productcategories": 4,
+    "visits": 4,
+    "idempotencykeys": 2,
+    "authsessions": 35,
+    "users": 1
+  }
+}
