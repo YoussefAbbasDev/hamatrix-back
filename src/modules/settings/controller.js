@@ -19,7 +19,7 @@ export async function updateSettings(req, res) {
 
 export async function uploadLogo(req, res) {
   if (!req.file) throw errors.validation([{ path: 'logo', message: 'اختر صورة الشعار' }]);
-  const logoUrl = `/uploads/brand/${req.file.filename}`;
+  const logoUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
   const settings = await settingsService.updateLogo(logoUrl, req.admin._id, req);
   return sendOk(res, { settings, logoUrl });
 }

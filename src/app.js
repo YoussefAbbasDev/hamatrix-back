@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
 import helmet from 'helmet';
@@ -24,6 +25,11 @@ import { dashboardRouter, reportsRouter } from './modules/reports/routes.js';
 
 const pinoHttp = pinoHttpModule.pinoHttp ?? pinoHttpModule;
 
+/**
+ * Builds the HTTP application. Long-running servers connect to the database at
+ * startup; serverless deployments wrap this app with a readiness middleware in
+ * `index.js` and reuse one connection per instance.
+ */
 export function createApp() {
   const app = express();
 
@@ -74,15 +80,19 @@ export function createApp() {
   app.use(cookieParser());
   app.use(mongoSanitize());
 
-  app.use(
-    '/uploads',
-    express.static(env.uploadDirAbs, {
-      fallthrough: true,
-      maxAge: '7d',
-      immutable: true,
-      index: false,
-    }),
-  );
+  // Local logo uploads only exist on a machine with a writable disk; on Vercel
+  // the logo is stored in MongoDB as a data URL, so the folder may be absent.
+  if (fs.existsSync(env.uploadDirAbs)) {
+    app.use(
+      '/uploads',
+      express.static(env.uploadDirAbs, {
+        fallthrough: true,
+        maxAge: '7d',
+        immutable: true,
+        index: false,
+      }),
+    );
+  }
 
   // Health and server time are intentionally outside the rate limiter.
   app.use('/api/v1', systemRouter);
@@ -116,11 +126,15 @@ export function createApp() {
   });
 
   if (env.NODE_ENV === 'production') {
+    // On Vercel the frontend is a separate static deployment, so this folder
+    // only exists when Express itself hosts the SPA.
     const clientDist = path.resolve(env.repoRoot, 'client', 'dist');
-    app.use(express.static(clientDist, { index: false, maxAge: '1h' }));
-    app.get(/^(?!\/api|\/uploads|\/socket\.io).*/, (req, res) => {
-      res.sendFile(path.join(clientDist, 'index.html'));
-    });
+    if (fs.existsSync(clientDist)) {
+      app.use(express.static(clientDist, { index: false, maxAge: '1h' }));
+      app.get(/^(?!\/api|\/uploads|\/socket\.io).*/, (req, res) => {
+        res.sendFile(path.join(clientDist, 'index.html'));
+      });
+    }
   }
 
   app.use(notFound);

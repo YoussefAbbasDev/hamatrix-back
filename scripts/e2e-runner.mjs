@@ -21,4 +21,4 @@ await mongoose.connect(process.env.MONGODB_URI);
 await mongoose.connection.db.dropDatabase();
 await mongoose.disconnect();
 
-await import('../src/server.js');
+await import('../src/main.js');

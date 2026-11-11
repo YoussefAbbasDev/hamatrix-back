@@ -51,4 +51,7 @@ export const errors = {
 
   internal: (message = 'حدث خطأ غير متوقع') =>
     new AppError(ERROR_CODES.INTERNAL_ERROR, 500, message),
+
+  unavailable: (message = 'الخدمة غير متاحة مؤقتًا، حاول بعد لحظات') =>
+    new AppError(ERROR_CODES.SERVICE_UNAVAILABLE, 503, message),
 };

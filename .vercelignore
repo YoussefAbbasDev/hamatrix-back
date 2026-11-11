@@ -1,0 +1,10 @@
+# Files that never need to reach Vercel for the API deployment.
+.env
+.env.*
+!.env.example
+backups/
+uploads/
+tests/
+scripts/
+vitest.config.js
+vercel.json.bak

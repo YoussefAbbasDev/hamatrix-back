@@ -36,6 +36,9 @@ const schema = z.object({
   ACCESS_TOKEN_MINUTES: z.coerce.number().int().min(1).max(120).default(15),
   REFRESH_TOKEN_DAYS: z.coerce.number().int().min(1).max(90).default(7),
   COOKIE_SECURE: boolFromEnv(false),
+  // Browsers only accept `none` on HTTPS; use it when the SPA and the API are
+  // deployed on different domains (for example Vercel + a separate API host).
+  COOKIE_SAME_SITE: z.enum(['strict', 'lax', 'none']).default('strict'),
 
   ADMIN_USERNAME: z.string().min(3).max(32).default('admin'),
   ADMIN_PASSWORD: z.string().min(6).max(128).default('123456'),
@@ -65,6 +68,9 @@ export const env = Object.freeze({
   corsOrigins: parsed.data.CORS_ORIGINS.split(',')
     .map((value) => value.trim())
     .filter(Boolean),
+  // SameSite=None is meaningless without Secure, so it forces the flag on.
+  cookieSameSite: parsed.data.COOKIE_SAME_SITE,
+  cookieSecure: parsed.data.COOKIE_SECURE || parsed.data.COOKIE_SAME_SITE === 'none',
   uploadDirAbs: path.resolve(serverRoot, parsed.data.UPLOAD_DIR),
   repoRoot,
   serverRoot,
@@ -85,12 +91,12 @@ if (isProd) {
     problems.push('CORS_ORIGINS must list the production origin');
   }
   if (problems.length > 0) {
+    const message = `Refusing to start in production:\n - ${problems.join('\n - ')}`;
+    // A serverless platform reports an exit as an opaque 500; throwing keeps the
+    // reason visible in the function logs.
+    if (process.env.VERCEL) throw new Error(message);
     // eslint-disable-next-line no-console
-    console.error('Refusing to start in production:');
-    for (const p of problems) {
-      // eslint-disable-next-line no-console
-      console.error(` - ${p}`);
-    }
+    console.error(message);
     process.exit(1);
   }
 }
